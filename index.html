@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>APBDes Desa Mata Iwoi 2024–2026</title>
+<style>
+  /* ====== TEMA DASAR (default, ditimpa per tahun) ====== */
+  :root{
+    --text:#e8f5ef;
+    --muted:#8fb0a5;
+    --accent-main:#2fd08a;
+    --accent-main-2:#29b6d8;
+    --accent-main-3:#f0c060;
+    --accent-main-4:#f472b6;
+    --neg:#ff7a7a;
+    --bg-base-1:#04120d;
+    --bg-base-2:#061a14;
+    --bg-base-3:#04100f;
+    --glow-1:rgba(47,208,138,.20);
+    --glow-2:rgba(41,182,216,.17);
+    --panel-bg:linear-gradient(160deg, rgba(255,255,255,.06), rgba(255,255,255,.025));
+    --panel-border:rgba(255,255,255,.10);
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{height:100%;background:var(--bg-base-1)}
+
+  body{
+    font-family:'Segoe UI', system-ui, -apple-system, 'Helvetica Neue', Arial, sans-serif;
+    color:var(--text);
+    height:100vh;
+    height:100dvh;
+    overflow:hidden;                 /* FULLSCREEN: tanpa scroll */
+    display:flex;
+    flex-direction:column;
+    gap:clamp(8px,1.15vh,16px);
+    padding:clamp(10px,1.5vh,24px) clamp(14px,2vw,40px);
+    background:
+      radial-gradient(1200px 620px at 12% -12%, var(--glow-1), transparent 62%),
+      radial-gradient(1000px 520px at 108% 112%, var(--glow-2), transparent 60%),
+      linear-gradient(160deg, var(--bg-base-1) 0%, var(--bg-base-2) 45%, var(--bg-base-3) 100%);
+    transition:color .5s ease;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ====== KILAT TRANSISI TEMA ====== */
+  .flash{
+    position:fixed; inset:0; z-index:99; pointer-events:none; opacity:0;
+    background:radial-gradient(circle at 50% 0%, var(--accent-main), transparent 68%);
+  }
+  .flash.on{animation:flashPulse .75s ease-out}
+  @keyframes flashPulse{
+    0%{opacity:0}
+    22%{opacity:.22}
+    100%{opacity:0}
+  }
+
+  /* ================= HEADER ================= */
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    gap:20px;flex:none;
+    padding:clamp(8px,1.2vh,16px) clamp(14px,1.6vw,26px);
+    background:var(--panel-bg);
+    border:1px solid var(--panel-border);
+    border-radius:18px;
+    backdrop-filter:blur(8px);
+    position:relative;overflow:hidden;
+  }
+  .topbar::before{
+    content:"";position:absolute;left:0;top:0;bottom:0;width:5px;
+    background:linear-gradient(180deg,var(--accent-main),var(--accent-main-2));
+    transition:background .5s ease;
+  }
+
+  .brand{display:flex;align-items:center;gap:clamp(10px,1.2vw,20px);min-width:0}
+  .logo-svg{
+    width:clamp(38px,4.6vh,58px);height:auto;flex:none;
+    filter:drop-shadow(0 0 12px color-mix(in srgb, var(--accent-main) 45%, transparent));
+  }
+  .logo-svg .ring{stroke:var(--accent-main);transition:stroke .5s ease}
+  .logo-svg .house{stroke:var(--accent-main-3);transition:stroke .5s ease}
+
+  .titles{min-width:0}
+  .titles h1{
+    font-size:clamp(16px,2.5vh,31px);
+    letter-spacing:.14em;font-weight:800;line-height:1.12;
+    background:linear-gradient(90deg,#ffffff, var(--accent-main) 55%, var(--accent-main-2));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    white-space:nowrap;transition:background .5s ease;
+  }
+  .titles p{
+    font-size:clamp(9px,1.2vh,13px);
+    color:var(--muted);letter-spacing:.07em;margin-top:3px;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    transition:color .5s ease;
+  }
+
+  .topbar-right{display:flex;align-items:center;gap:clamp(10px,1.4vw,22px);flex:none}
+  .clockbox{text-align:right}
+  .clock{
+    font-size:clamp(17px,2.7vh,33px);font-weight:800;
+    font-variant-numeric:tabular-nums;letter-spacing:.05em;
+    color:#fff;line-height:1;
+    text-shadow:0 0 20px color-mix(in srgb, var(--accent-main) 55%, transparent);
+  }
+  .date{font-size:clamp(9px,1.15vh,12px);color:var(--muted);letter-spacing:.05em;margin-top:4px}
+
+  .live{
+    display:flex;align-items:center;gap:7px;
+    font-size:clamp(9px,1.1vh,12px);letter-spacing:.16em;font-weight:700;
+    color:var(--accent-main);
+    background:color-mix(in srgb, var(--accent-main) 10%, transparent);
+    border:1px solid color-mix(in srgb, var(--accent-main) 32%, transparent);
+    padding:7px 13px;border-radius:99px;transition:.5s;
+  }
+  .live .dot{
+    width:8px;height:8px;border-radius:50%;background:var(--accent-main);
+    animation:pulse 1.8s infinite;
+  }
+  @keyframes pulse{
+    0%{box-shadow:0 0 0 0 color-mix(in srgb, var(--accent-main) 65%, transparent)}
+    70%{box-shadow:0 0 0 10px transparent}
+    100%{box-shadow:0 0 0 0 transparent}
+  }
+
+  /* ====== TOMBOL FULLSCREEN ====== */
+  .fs-btn{
+    width:clamp(34px,4.4vh,46px);height:clamp(34px,4.4vh,46px);
+    flex:none;border-radius:12px;display:grid;place-items:center;
+    background:rgba(255,255,255,.05);
+    border:1px solid var(--panel-border);
+    color:var(--muted);cursor:pointer;
+    transition:.25s ease;
+  }
+  .fs-btn:hover{
+    color:#fff;
+    border-color:color-mix(in srgb, var(--accent-main) 55%, transparent);
+    background:color-mix(in srgb, var(--accent-main) 15%, transparent);
+  }
+  .fs-btn.active{
+    color:#05140f;
+    background:var(--accent-main);
+    border-color:transparent;
+    box-shadow:0 0 18px color-mix(in srgb, var(--accent-main) 45%, transparent);
+  }
+  .fs-btn svg{width:52%;height:52%;stroke:currentColor;fill:none;stroke-width:2.1;
+              stroke-linecap:round;stroke-linejoin:round}
+
+  /* ================= PILIH TAHUN ================= */
+  .years{
+    display:flex;gap:clamp(8px,1vw,14px);
+    position:relative;padding-bottom:6px;flex:none;
+  }
+  .year-btn{
+    flex:1;font-family:inherit;
+    font-size:clamp(12px,1.85vh,21px);
+    font-weight:800;letter-spacing:.13em;
+    color:var(--muted);
+    background:rgba(255,255,255,.035);
+    border:1px solid var(--panel-border);
+    border-radius:14px;
+    padding:clamp(6px,1vh,13px) 10px;
+    cursor:pointer;
+    transition:.35s cubic-bezier(.22,.9,.3,1);
+    position:relative;overflow:hidden;
+  }
+  .year-btn:hover{
+    color:#fff;
+    border-color:color-mix(in srgb, var(--accent-main) 40%, transparent);
+    background:color-mix(in srgb, var(--accent-main) 9%, transparent);
+  }
+  .year-btn.active{
+    color:#05140f;
+    background:linear-gradient(135deg, var(--accent-main), var(--accent-main-2));
+    border-color:transparent;
+    box-shadow:0 8px 26px color-mix(in srgb, var(--accent-main) 32%, transparent);
+    transform:translateY(-1px);
+  }
+  .year-btn .tag{
+    display:block;font-size:clamp(8px,.95vh,11px);
+    font-weight:600;letter-spacing:.04em;opacity:.75;margin-top:2px;
+  }
+
+  .progress-track{
+    position:absolute;left:0;right:0;bottom:0;height:3px;
+    background:rgba(255,255,255,.07);border-radius:99px;overflow:hidden;
+  }
+  .progress-bar{
+    display:block;height:100%;width:0;border-radius:99px;
+    background:linear-gradient(90deg,var(--accent-main),var(--accent-main-2));
+    box-shadow:0 0 10px color-mix(in srgb, var(--accent-main) 75%, transparent);
+  }
+  @keyframes grow{from{width:0}to{width:100%}}
+
+  /* ================= KARTU RINGKASAN (4 KARTU) ================= */
+  .cards{
+    display:grid;grid-template-columns:repeat(4,1fr);
+    gap:clamp(8px,1.2vw,18px);flex:none;
+  }
+  .card{
+    position:relative;display:flex;align-items:center;
+    gap:clamp(9px,1.1vw,16px);
+    padding:clamp(9px,1.5vh,20px) clamp(11px,1.3vw,22px);
+    background:var(--panel-bg);
+    border:1px solid var(--panel-border);
+    border-radius:16px;
+    overflow:hidden;backdrop-filter:blur(8px);
+    min-width:0;
+  }
+  .card.pendapatan{--accent:var(--accent-main)}
+  .card.belanja{--accent:var(--accent-main-2)}
+  .card.pembiayaan{--accent:var(--accent-main-3)}
+  .card.silpa{--accent:var(--accent-main-4)}
+
+  .card::after{
+    content:"";position:absolute;left:0;top:0;bottom:0;width:4px;
+    background:var(--accent);transition:background .5s ease;
+  }
+  .card::before{
+    content:"";position:absolute;right:-40px;top:-40px;
+    width:130px;height:130px;border-radius:50%;
+    background:radial-gradient(circle, var(--accent) 0%, transparent 70%);
+    opacity:.14;pointer-events:none;transition:background .5s ease;
+  }
+  .card-icon{
+    width:clamp(30px,4.2vh,50px);height:clamp(30px,4.2vh,50px);
+    flex:none;border-radius:14px;display:grid;place-items:center;
+    background:color-mix(in srgb, var(--accent) 16%, transparent);
+    border:1px solid color-mix(in srgb, var(--accent) 38%, transparent);
+    transition:.5s ease;
+  }
+  .card-icon svg{width:58%;height:58%;stroke:var(--accent);fill:none;
+                 stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;
+                 transition:stroke .5s ease}
+  .card-label{
+    font-size:clamp(8px,1.1vh,12px);
+    letter-spacing:.12em;text-transform:uppercase;
+    color:var(--muted);font-weight:700;
+  }
+  .card-value{
+    font-size:clamp(12.5px,2.05vh,26px);font-weight:800;
+    font-variant-numeric:tabular-nums;color:#fff;
+    margin-top:2px;white-space:nowrap;
+  }
+  .card-sub{font-size:clamp(8px,1vh,11px);color:var(--muted);margin-top:3px;
+            white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+  /* ================= PANEL UTAMA (3 PANEL) ================= */
+  .main{
+    display:grid;
+    grid-template-columns:minmax(0,1fr) minmax(0,1.15fr) minmax(0,.95fr);
+    gap:clamp(8px,1.2vw,18px);
+    flex:1;min-height:0;
+  }
+  .panel{
+    display:flex;flex-direction:column;min-height:0;min-width:0;overflow:hidden;
+    padding:clamp(9px,1.4vh,18px) clamp(11px,1.3vw,22px);
+    background:var(--panel-bg);
+    border:1px solid var(--panel-border);
+    border-radius:18px;backdrop-filter:blur(8px);
+  }
+  .panel-head{
+    display:flex;align-items:center;justify-content:space-between;
+    gap:10px;margin-bottom:clamp(7px,1.1vh,15px);
+    padding-bottom:clamp(6px,.95vh,11px);
+    border-bottom:1px solid rgba(255,255,255,.07);flex:none;
+  }
+  .panel-head h2{
+    font-size:clamp(10.5px,1.55vh,18px);
+    letter-spacing:.13em;text-transform:uppercase;font-weight:800;
+    display:flex;align-items:center;gap:9px;
+  }
+  .panel-head h2::before{
+    content:"";width:8px;height:8px;border-radius:50%;
+    background:var(--accent-main);
+    box-shadow:0 0 12px var(--accent-main);
+    transition:.5s ease;
+  }
+  .panel:nth-child(2) .panel-head h2::before{
+    background:var(--accent-main-2);
+    box-shadow:0 0 12px var(--accent-main-2);
+  }
+  .panel.pembiayaan .panel-head h2::before{
+    background:var(--accent-main-3);
+    box-shadow:0 0 12px var(--accent-main-3);
+  }
+  .badge{
+    font-size:clamp(8.5px,1.05vh,11.5px);font-weight:800;letter-spacing:.08em;
+    padding:5px 12px;border-radius:99px;color:#05140f;
+    background:linear-gradient(135deg, var(--accent-main-3),
+              color-mix(in srgb, var(--accent-main-3) 55%, #ffffff));
+    transition:.5s ease;white-space:nowrap;
+  }
+
+  /* ---- Bar Pendapatan ---- */
+  .bars{
+    flex:1;min-height:0;display:flex;flex-direction:column;
+    justify-content:space-around;gap:clamp(5px,.9vh,13px);
+    overflow-y:auto;padding-right:4px;
+  }
+  .bars::-webkit-scrollbar{width:5px}
+  .bars::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:9px}
+
+  .bar-row{display:flex;flex-direction:column;gap:5px}
+  .bar-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+  .bar-label{font-size:clamp(8.5px,1.15vh,13px);color:#cfe9df;font-weight:600;
+             white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .bar-value{
+    font-size:clamp(8.5px,1.15vh,13px);font-weight:800;
+    font-variant-numeric:tabular-nums;color:#fff;white-space:nowrap;
+  }
+  .bar-track{
+    height:clamp(6px,1.1vh,12px);
+    background:rgba(255,255,255,.07);
+    border-radius:99px;overflow:hidden;
+  }
+  .bar-fill{
+    height:100%;width:0;border-radius:99px;
+    transition:width .95s cubic-bezier(.22,.9,.3,1);
+    box-shadow:0 0 14px -2px currentColor;
+  }
+
+  /* ---- Donut Belanja ---- */
+  .donut-wrap{
+    flex:1;min-height:0;display:grid;
+    grid-template-columns:minmax(110px,43%) 1fr;
+    gap:clamp(10px,1.6vw,26px);align-items:center;
+  }
+  .donut-box{
+    position:relative;width:100%;max-width:min(100%, 280px);
+    aspect-ratio:1;margin:0 auto;
+    filter:drop-shadow(0 0 26px color-mix(in srgb, var(--accent-main-2) 22%, transparent));
+  }
+  .donut-box svg{width:100%;height:100%;display:block}
+  .donut-center{
+    position:absolute;inset:0;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;
+    pointer-events:none;text-align:center;padding:0 12%;
+  }
+  .dc-label{
+    font-size:clamp(7px,.95vh,11px);letter-spacing:.12em;
+    text-transform:uppercase;color:var(--muted);font-weight:700;
+  }
+  .dc-value{
+    font-size:clamp(10px,1.7vh,20px);font-weight:800;color:#fff;
+    margin-top:4px;font-variant-numeric:tabular-nums;line-height:1.1;
+  }
+
+  .legend{
+    display:flex;flex-direction:column;justify-content:center;
+    gap:clamp(4px,.8vh,11px);min-width:0;
+  }
+  .legend-item{
+    display:flex;align-items:center;gap:8px;
+    font-size:clamp(8px,1.08vh,12px);min-width:0;
+  }
+  .legend-dot{
+    width:10px;height:10px;border-radius:4px;flex:none;
+    background:currentColor;box-shadow:0 0 10px -1px currentColor;
+  }
+  .legend-name{
+    flex:1;min-width:0;color:#cfe9df;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .legend-pct{font-weight:800;color:#fff;font-variant-numeric:tabular-nums;white-space:nowrap}
+
+  /* ---- Panel Pembiayaan ---- */
+  .fin-wrap{
+    flex:1;min-height:0;display:flex;flex-direction:column;
+    justify-content:space-between;gap:clamp(6px,1vh,14px);
+    overflow-y:auto;padding-right:3px;
+  }
+  .fin-wrap::-webkit-scrollbar{width:4px}
+  .fin-wrap::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:9px}
+
+  .fin-group{display:flex;flex-direction:column;gap:clamp(4px,.75vh,9px)}
+  .fin-group-title{
+    display:flex;align-items:center;gap:7px;
+    font-size:clamp(8px,1.05vh,11.5px);
+    letter-spacing:.08em;text-transform:uppercase;font-weight:800;
+    color:var(--muted);
+  }
+  .fin-group-title .dot{width:8px;height:8px;border-radius:50%;flex:none}
+  .dot.in{background:var(--accent-main);box-shadow:0 0 10px var(--accent-main)}
+  .dot.out{background:var(--neg);box-shadow:0 0 10px var(--neg)}
+  .fin-sub{
+    margin-left:auto;color:#fff;font-weight:800;letter-spacing:0;
+    font-size:clamp(8px,1.05vh,11.5px);font-variant-numeric:tabular-nums;
+    white-space:nowrap;
+  }
+
+  .fin-row{display:flex;flex-direction:column;gap:3px}
+  .fin-row-top{display:flex;justify-content:space-between;gap:8px;
+               font-size:clamp(8px,1.05vh,11.5px)}
+  .fin-label{color:#cfe9df;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .fin-value{font-weight:800;color:#fff;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .fin-track{
+    height:clamp(4px,.75vh,8px);
+    background:rgba(255,255,255,.07);border-radius:99px;overflow:hidden;
+  }
+  .fin-fill{
+    display:block;height:100%;width:0;border-radius:99px;
+    background:currentColor;box-shadow:0 0 10px -2px currentColor;
+    transition:width .9s cubic-bezier(.22,.9,.3,1);
+  }
+
+  .fin-neto{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding:clamp(7px,1.1vh,13px) clamp(10px,1.1vw,16px);
+    border-radius:12px;
+    background:color-mix(in srgb, var(--accent-main-3) 10%, transparent);
+    border:1px solid color-mix(in srgb, var(--accent-main-3) 30%, transparent);
+    transition:.4s ease;
+  }
+  .fin-neto.neg{
+    background:color-mix(in srgb, var(--neg) 10%, transparent);
+    border-color:color-mix(in srgb, var(--neg) 32%, transparent);
+  }
+  .fin-neto-label{
+    font-size:clamp(8.5px,1.1vh,12px);letter-spacing:.1em;
+    text-transform:uppercase;font-weight:800;color:var(--accent-main-3);
+    transition:color .4s ease;
+  }
+  .fin-neto.neg .fin-neto-label{color:var(--neg)}
+  .fin-neto-note{font-size:clamp(7px,.95vh,10.5px);color:var(--muted);margin-top:2px}
+  .fin-neto-value{
+    font-size:clamp(13px,2vh,24px);font-weight:800;
+    font-variant-numeric:tabular-nums;color:#fff;white-space:nowrap;
+    text-shadow:0 0 16px color-mix(in srgb, var(--accent-main-3) 45%, transparent);
+  }
+  .fin-neto.neg .fin-neto-value{
+    text-shadow:0 0 16px color-mix(in srgb, var(--neg) 45%, transparent);
+  }
+
+  /* ================= TICKER ================= */
+  .ticker{
+    position:relative;overflow:hidden;border-radius:12px;flex:none;
+    background:rgba(255,255,255,.04);
+    border:1px solid var(--panel-border);
+    padding:clamp(5px,.9vh,10px) 0;
+  }
+  .ticker::before,.ticker::after{
+    content:"";position:absolute;top:0;bottom:0;width:60px;z-index:2;pointer-events:none;
+  }
+  .ticker::before{left:0;background:linear-gradient(90deg, var(--bg-base-1), transparent)}
+  .ticker::after{right:0;background:linear-gradient(270deg, var(--bg-base-1), transparent)}
+  .ticker-track{display:flex;width:max-content;animation:marquee 52s linear infinite}
+  .ticker-track span{
+    font-size:clamp(9px,1.1vh,12.5px);letter-spacing:.05em;
+    color:#b8d8cc;padding-right:60px;white-space:nowrap;
+  }
+  .ticker-track b{color:var(--accent-main);font-weight:800;transition:color .5s ease}
+  @keyframes marquee{to{transform:translateX(-50%)}}
+
+  /* ================= RESPONSIF ================= */
+  @media (max-width: 1280px){
+    body{height:auto;min-height:100dvh;overflow-y:auto}
+    .main{grid-template-columns:1fr 1fr}
+    .panel.pembiayaan{grid-column:1 / -1}
+    .donut-wrap{grid-template-columns:minmax(110px,36%) 1fr}
+  }
+  @media (max-width: 1080px){
+    .cards{grid-template-columns:repeat(2,1fr)}
+  }
+  @media (max-width: 760px){
+    body{height:auto;min-height:100dvh;overflow-y:auto}
+    .main{grid-template-columns:1fr}
+    .cards{grid-template-columns:1fr}
+    .titles h1{white-space:normal;font-size:16px}
+    .titles p{white-space:normal}
+    .donut-wrap{grid-template-columns:1fr;gap:12px}
+  }
+  @media (max-width: 620px){
+    .topbar{flex-wrap:wrap}
+    .year-btn .tag{display:none}
+  }
+</style>
+</head>
+<body>
+
+  <!-- Kilat transisi tema -->
+  <div class="flash" id="flash"></div>
+
+  <!-- ================= HEADER ================= -->
+  <header class="topbar">
+    <div class="brand">
+      <svg class="logo-svg" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+        <path class="ring" d="M24 3 42 11v12c0 10-8 18-18 21C14 41 6 33 6 23V11z"
+              stroke-width="2.6" fill="rgba(255,255,255,.05)"/>
+        <path class="house" d="M15.5 26.5 24 19l8.5 7.5" stroke-width="2.6"
+              stroke-linecap="round" stroke-linejoin="round"/>
+        <path class="house" d="M19 25.5V34h10v-8.5" stroke-width="2.6"
+              stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="titles">
+        <h1>DESA MATA IWOI</h1>
+        <p>Kecamatan Amonggedo · Kabupaten Konawe · Provinsi Sulawesi Tenggara</p>
+      </div>
+    </div>
+
+    <div class="topbar-right">
+      <div class="live"><span class="dot"></span>LIVE</div>
+      <div class="clockbox">
+        <div class="clock" id="clock">--:--:--</div>
+        <div class="date" id="date">Memuat tanggal…</div>
+      </div>
+      <button class="fs-btn" id="fsBtn" title="Layar Penuh (F)" aria-label="Layar Penuh">
+        <svg viewBox="0 0 24 24">
+          <path d="M8 3H5a2 2 0 0 0-2 2v3"/>
+          <path d="M16 3h3a2 2 0 0 1 2 2v3"/>
+          <path d="M16 21h3a2 2 0 0 0 2-2v-3"/>
+          <path d="M8 21H5a2 2 0 0 1-2-2v-3"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- ================= PILIH TAHUN ================= -->
+  <nav class="years" id="years">
+    <button class="year-btn active" data-year="2024">2024<span class="tag">Realisasi · Emerald</span></button>
+    <button class="year-btn" data-year="2025">2025<span class="tag">Berjalan · Ocean</span></button>
+    <button class="year-btn" data-year="2026">2026<span class="tag">Rencana · Amethyst</span></button>
+    <div class="progress-track"><span class="progress-bar" id="progressBar"></span></div>
+  </nav>
+
+  <!-- ================= KARTU RINGKASAN ================= -->
+  <section class="cards">
+    <div class="card pendapatan">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>
+      </div>
+      <div style="min-width:0">
+        <div class="card-label">Total Pendapatan</div>
+        <div class="card-value" id="totalPendapatan">Rp 0</div>
+        <div class="card-sub" id="subPendapatan">—</div>
+      </div>
+    </div>
+
+    <div class="card belanja">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
+      </div>
+      <div style="min-width:0">
+        <div class="card-label">Total Belanja</div>
+        <div class="card-value" id="totalBelanja">Rp 0</div>
+        <div class="card-sub" id="subBelanja">—</div>
+      </div>
+    </div>
+
+    <div class="card pembiayaan">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24">
+          <path d="M4 8h13l-3-3"/>
+          <path d="M20 16H7l3 3"/>
+        </svg>
+      </div>
+      <div style="min-width:0">
+        <div class="card-label">Pembiayaan Neto</div>
+        <div class="card-value" id="totalPembiayaan">Rp 0</div>
+        <div class="card-sub" id="subPembiayaan">—</div>
+      </div>
+    </div>
+
+    <div class="card silpa">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="9"/>
+          <path d="m8.5 12.5 2.5 2.5 4.5-5"/>
+        </svg>
+      </div>
+      <div style="min-width:0">
+        <div class="card-label" id="labelSilpa">SiLPA</div>
+        <div class="card-value" id="totalSilpa">Rp 0</div>
+        <div class="card-sub" id="subSilpa">—</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PANEL UTAMA ================= -->
+  <section class="main">
+
+    <!-- Pendapatan -->
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Pendapatan</h2>
+        <span class="badge" id="badgePendapatan">2024</span>
+      </div>
+      <div class="bars" id="barsPendapatan"></div>
+    </div>
+
+    <!-- Belanja -->
+    <div class="panel">
+      <div class="panel-head">
+        <h2>Belanja</h2>
+        <span class="badge" id="badgeBelanja">2024</span>
+      </div>
+      <div class="donut-wrap">
+        <div class="donut-box">
+          <svg viewBox="0 0 200 200" id="donut" aria-hidden="true"></svg>
+          <div class="donut-center">
+            <div class="dc-label">Total Belanja</div>
+            <div class="dc-value" id="donutTotal">Rp 0</div>
+          </div>
+        </div>
+        <div class="legend" id="legend"></div>
+      </div>
+    </div>
+
+    <!-- Pembiayaan -->
+    <div class="panel pembiayaan">
+      <div class="panel-head">
+        <h2>Pembiayaan</h2>
+        <span class="badge" id="badgePembiayaan">2024</span>
+      </div>
+
+      <div class="fin-wrap">
+        <div class="fin-group">
+          <div class="fin-group-title">
+            <span class="dot in"></span>
+            Penerimaan Pembiayaan
+            <span class="fin-sub" id="subPenerimaan">Rp 0</span>
+          </div>
+          <div id="penerimaanList"></div>
+        </div>
+
+        <div class="fin-group">
+          <div class="fin-group-title">
+            <span class="dot out"></span>
+            Pengeluaran Pembiayaan
+            <span class="fin-sub" id="subPengeluaran">Rp 0</span>
+          </div>
+          <div id="pengeluaranList"></div>
+        </div>
+
+        <div class="fin-neto" id="netoBox">
+          <div>
+            <div class="fin-neto-label">Pembiayaan Neto</div>
+            <div class="fin-neto-note" id="netoNote">Penerimaan − Pengeluaran</div>
+          </div>
+          <div class="fin-neto-value" id="netoValue">Rp 0</div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ================= TICKER ================= -->
+  <footer class="ticker">
+    <div class="ticker-track" id="tickerTrack"></div>
+  </footer>
+
+<script>
+/* =========================================================
+   1. TEMA PER TAHUN (warna + palet grafik)
+   ========================================================= */
+const THEMES = {
+  /* ---------- 2024 · EMERALD ---------- */
+  "2024": {
+    name: "Emerald",
+    vars: {
+      "--accent-main":   "#2fd08a",
+      "--accent-main-2": "#29b6d8",
+      "--accent-main-3": "#f0c060",
+      "--accent-main-4": "#f472b6",
+      "--neg":           "#ff7a7a",
+      "--bg-base-1":     "#04120d",
+      "--bg-base-2":     "#061a14",
+      "--bg-base-3":     "#04100f",
+      "--glow-1":        "rgba(47,208,138,.20)",
+      "--glow-2":        "rgba(41,182,216,.17)",
+      "--text":          "#e8f5ef",
+      "--muted":         "#8fb0a5"
+    },
+    pendapatanPalette: ["#2fd08a","#3ad0b0","#29b6d8","#f0c060","#a78bfa"],
+    belanjaPalette:    ["#2fd08a","#29b6d8","#f0c060","#a78bfa","#ff7a7a"]
+  },
+
+  /* ---------- 2025 · OCEAN ---------- */
+  "2025": {
+    name: "Ocean",
+    vars: {
+      "--accent-main":   "#38bdf8",
+      "--accent-main-2": "#6366f1",
+      "--accent-main-3": "#fbbf24",
+      "--accent-main-4": "#34d399",
+      "--neg":           "#fb7185",
+      "--bg-base-1":     "#030d1a",
+      "--bg-base-2":     "#05182b",
+      "--bg-base-3":     "#03111f",
+      "--glow-1":        "rgba(56,189,248,.20)",
+      "--glow-2":        "rgba(99,102,241,.20)",
+      "--text":          "#e6f2ff",
+      "--muted":         "#8aa8c4"
+    },
+    pendapatanPalette: ["#38bdf8","#3b82f6","#22d3ee","#a78bfa","#fbbf24"],
+    belanjaPalette:    ["#38bdf8","#6366f1","#22d3ee","#a78bfa","#fbbf24"]
+  },
+
+  /* ---------- 2026 · AMETHYST ---------- */
+  "2026": {
+    name: "Amethyst",
+    vars: {
+      "--accent-main":   "#a78bfa",
+      "--accent-main-2": "#8b5cf6",
+      "--accent-main-3": "#f0c060",
+      "--accent-main-4": "#38bdf8",
+      "--neg":           "#fb7185",
+      "--bg-base-1":     "#10061c",
+      "--bg-base-2":     "#180a2b",
+      "--bg-base-3":     "#0d0518",
+      "--glow-1":        "rgba(167,139,250,.22)",
+      "--glow-2":        "rgba(240,192,96,.16)",
+      "--text":          "#f2e9ff",
+      "--muted":         "#a894c4"
+    },
+    pendapatanPalette: ["#a78bfa","#c084fc","#8b5cf6","#f0c060","#f472b6"],
+    belanjaPalette:    ["#a78bfa","#8b5cf6","#f0c060","#f472b6","#c084fc"]
+  }
+};
+
+/* =========================================================
+   2. DATA APBDES (CONTOH / TEMPLATE — SILAKAN GANTI)
+   ========================================================= */
+const DATA = {
+  "2024": {
+    pendapatan: [
+      { label: "Dana Desa (DD)",               value: 750000000 },
+      { label: "Alokasi Dana Desa (ADD)",      value: 620000000 },
+      { label: "Bagi Hasil Pajak & Retribusi", value: 180000000 },
+      { label: "Pendapatan Asli Desa (PADes)", value: 100000000 },
+      { label: "Bantuan Keuangan Prov/Kab",    value: 200000000 }
+    ],
+    belanja: [
+      { label: "Penyelenggaraan Pemerintahan Desa", value: 620000000 },
+      { label: "Pelaksanaan Pembangunan Desa",      value: 730000000 },
+      { label: "Pembinaan Kemasyarakatan",          value: 120000000 },
+      { label: "Pemberdayaan Masyarakat",           value: 250000000 },
+      { label: "Penanggulangan Bencana & Darurat",  value:  60000000 }
+    ],
+    pembiayaan: {
+      penerimaan: [
+        { label: "SILPA Tahun Anggaran Sebelumnya", value: 150000000 },
+        { label: "Hasil Penjualan Kekayaan Desa",   value:  20000000 }
+      ],
+      pengeluaran: [
+        { label: "Pembentukan Dana Cadangan",  value: 50000000 },
+        { label: "Penyertaan Modal BUMDes",    value: 75000000 }
+      ]
+    }
+  },
+
+  "2025": {
+    pendapatan: [
+      { label: "Dana Desa (DD)",               value: 820000000 },
+      { label: "Alokasi Dana Desa (ADD)",      value: 700000000 },
+      { label: "Bagi Hasil Pajak & Retribusi", value: 200000000 },
+      { label: "Pendapatan Asli Desa (PADes)", value: 130000000 },
+      { label: "Bantuan Keuangan Prov/Kab",    value: 250000000 }
+    ],
+    belanja: [
+      { label: "Penyelenggaraan Pemerintahan Desa", value: 700000000 },
+      { label: "Pelaksanaan Pembangunan Desa",      value: 850000000 },
+      { label: "Pembinaan Kemasyarakatan",          value: 140000000 },
+      { label: "Pemberdayaan Masyarakat",           value: 285000000 },
+      { label: "Penanggulangan Bencana & Darurat",  value:  70000000 }
+    ],
+    pembiayaan: {
+      penerimaan: [
+        { label: "SILPA Tahun Anggaran Sebelumnya", value: 115000000 },
+        { label: "Hasil Penjualan Kekayaan Desa",   value:  25000000 }
+      ],
+      pengeluaran: [
+        { label: "Pembentukan Dana Cadangan",  value: 60000000 },
+        { label: "Penyertaan Modal BUMDes",    value: 50000000 }
+      ]
+    }
+  },
+
+  "2026": {
+    pendapatan: [
+      { label: "Dana Desa (DD)",               value: 900000000 },
+      { label: "Alokasi Dana Desa (ADD)",      value: 780000000 },
+      { label: "Bagi Hasil Pajak & Retribusi", value: 220000000 },
+      { label: "Pendapatan Asli Desa (PADes)", value: 150000000 },
+      { label: "Bantuan Keuangan Prov/Kab",    value: 300000000 }
+    ],
+    belanja: [
+      { label: "Penyelenggaraan Pemerintahan Desa", value: 760000000 },
+      { label: "Pelaksanaan Pembangunan Desa",      value: 950000000 },
+      { label: "Pembinaan Kemasyarakatan",          value: 160000000 },
+      { label: "Pemberdayaan Masyarakat",           value: 340000000 },
+      { label: "Penanggulangan Bencana & Darurat",  value:  80000000 }
+    ],
+    pembiayaan: {
+      penerimaan: [
+        { label: "SILPA Tahun Anggaran Sebelumnya", value: 45000000 },
+        { label: "Hasil Penjualan Kekayaan Desa",   value: 30000000 }
+      ],
+      pengeluaran: [
+        { label: "Pembentukan Dana Cadangan",  value: 40000000 },
+        { label: "Penyertaan Modal BUMDes",    value: 60000000 }
+      ]
+    }
+  }
+};
+
+const ORDER = ["2024", "2025", "2026"];
+const ROTATE_MS = 15000;
+
+/* =========================================================
+   3. UTILITAS
+   ========================================================= */
+const $  = (id) => document.getElementById(id);
+const NS = "http://www.w3.org/2000/svg";
+
+const fmt = (n) => "Rp " + Math.round(n).toLocaleString("id-ID");
+
+function fmtShort(n){
+  const a = Math.abs(n);
+  if (a >= 1e9) return (a / 1e9).toFixed(2).replace(".", ",") + " M";
+  if (a >= 1e6) return (a / 1e6).toFixed(1).replace(".", ",") + " Jt";
+  if (a >= 1e3) return (a / 1e3).toFixed(0) + " Rb";
+  return a.toLocaleString("id-ID");
+}
+
+const anims = new WeakMap();
+function animateNumber(el, end, formatter = fmt, dur = 950) {
+  if (anims.has(el)) cancelAnimationFrame(anims.get(el));
+  const t0 = performance.now();
+  function step(t) {
+    const p = Math.min((t - t0) / dur, 1);
+    const e = 1 - Math.pow(1 - p, 3);
+    el.textContent = formatter(end * e);
+    if (p < 1) anims.set(el, requestAnimationFrame(step));
+  }
+  anims.set(el, requestAnimationFrame(step));
+}
+
+/* =========================================================
+   4. TERAPKAN TEMA
+   ========================================================= */
+function applyTheme(yearKey) {
+  const t = THEMES[yearKey];
+  const root = document.documentElement;
+  Object.entries(t.vars).forEach(([k, v]) => root.style.setProperty(k, v));
+  document.body.dataset.year = yearKey;
+}
+
+/* =========================================================
+   5. RENDER
+   ========================================================= */
+const DONUT_R = 80;
+const DONUT_C = 2 * Math.PI * DONUT_R;
+
+function render(yearKey) {
+  const d     = DATA[yearKey];
+  const theme = THEMES[yearKey];
+
+  /* ---------- Perhitungan ---------- */
+  const totalP  = d.pendapatan.reduce((a, b) => a + b.value, 0);
+  const totalB  = d.belanja.reduce((a, b) => a + b.value, 0);
+  const surplus = totalP - totalB;
+
+  const penerimaan = d.pembiayaan.penerimaan;
+  const pengeluaran = d.pembiayaan.pengeluaran;
+  const totalPen   = penerimaan.reduce((a, b) => a + b.value, 0);
+  const totalPeng  = pengeluaran.reduce((a, b) => a + b.value, 0);
+  const neto       = totalPen - totalPeng;
+  const silpa      = surplus + neto;
+
+  $("badgePendapatan").textContent  = yearKey + " · " + theme.name;
+  $("badgeBelanja").textContent     = yearKey + " · " + theme.name;
+  $("badgePembiayaan").textContent  = yearKey + " · " + theme.name;
+
+  /* ---------- Kartu ringkasan ---------- */
+  animateNumber($("totalPendapatan"), totalP);
+  $("subPendapatan").textContent =
+    d.pendapatan.length + " sumber · " +
+    (surplus >= 0 ? "Surplus " : "Defisit ") + fmtShort(surplus);
+
+  animateNumber($("totalBelanja"), totalB);
+  $("subBelanja").textContent = d.belanja.length + " bidang belanja";
+
+  animateNumber($("totalPembiayaan"), Math.abs(neto), v => (neto < 0 ? "−" : "") + fmt(v));
+  $("subPembiayaan").textContent =
+    "Terima " + fmtShort(totalPen) + " · Keluar " + fmtShort(totalPeng);
+
+  $("labelSilpa").textContent = silpa >= 0 ? "SiLPA" : "SiLPA (Kurang)";
+  animateNumber($("totalSilpa"), Math.abs(silpa), v => (silpa < 0 ? "−" : "") + fmt(v));
+  $("subSilpa").textContent =
+    "Surplus " + fmtShort(surplus) + " · Neto " +
+    (neto >= 0 ? "+" : "−") + fmtShort(neto);
+
+  /* ---------- Bar Pendapatan ---------- */
+  const barsBox = $("barsPendapatan");
+  barsBox.innerHTML = "";
+  const maxP = Math.max(...d.pendapatan.map((x) => x.value));
+
+  d.pendapatan.forEach((item, i) => {
+    const color = theme.pendapatanPalette[i % theme.pendapatanPalette.length];
+
+    const row = document.createElement("div");
+    row.className = "bar-row";
+    row.innerHTML =
+      '<div class="bar-top">' +
+        '<span class="bar-label">' + item.label + '</span>' +
+        '<span class="bar-value">' + fmt(item.value) + '</span>' +
+      '</div>' +
+      '<div class="bar-track">' +
+        '<div class="bar-fill" style="color:' + color +
+          ';background:linear-gradient(90deg,' + color + ',' + color + 'aa)"></div>' +
+      '</div>';
+    barsBox.appendChild(row);
+
+    const fill = row.querySelector(".bar-fill");
+    const pct  = (item.value / maxP) * 100;
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      fill.style.width = pct + "%";
+    }));
+  });
+
+  /* ---------- Donut Belanja ---------- */
+  const svg = $("donut");
+  svg.innerHTML = "";
+
+  const bg = document.createElementNS(NS, "circle");
+  bg.setAttribute("cx", 100); bg.setAttribute("cy", 100);
+  bg.setAttribute("r", DONUT_R);
+  bg.setAttribute("fill", "none");
+  bg.setAttribute("stroke", "rgba(255,255,255,.06)");
+  bg.setAttribute("stroke-width", 30);
+  svg.appendChild(bg);
+
+  let offset = 0;
+  const legend = $("legend");
+  legend.innerHTML = "";
+
+  d.belanja.forEach((item, i) => {
+    const color = theme.belanjaPalette[i % theme.belanjaPalette.length];
+    const frac  = item.value / totalB;
+    const len   = Math.max(frac * DONUT_C - 3, 0);
+
+    const c = document.createElementNS(NS, "circle");
+    c.setAttribute("cx", 100); c.setAttribute("cy", 100);
+    c.setAttribute("r", DONUT_R);
+    c.setAttribute("fill", "none");
+    c.setAttribute("stroke", color);
+    c.setAttribute("stroke-width", 30);
+    c.setAttribute("stroke-dasharray", "0 " + DONUT_C);
+    c.setAttribute("stroke-dashoffset", -offset);
+    c.style.transform = "rotate(-90deg)";
+    c.style.transformOrigin = "100px 100px";
+    c.style.transition = "stroke-dasharray .95s cubic-bezier(.22,.9,.3,1)";
+    svg.appendChild(c);
+
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      c.setAttribute("stroke-dasharray", len + " " + (DONUT_C - len));
+    }));
+
+    offset += frac * DONUT_C;
+
+    const row = document.createElement("div");
+    row.className = "legend-item";
+    row.innerHTML =
+      '<span class="legend-dot" style="color:' + color + '"></span>' +
+      '<span class="legend-name" title="' + item.label + '">' + item.label + '</span>' +
+      '<span class="legend-pct">' + (frac * 100).toFixed(1).replace(".", ",") + '%</span>';
+    legend.appendChild(row);
+  });
+
+  animateNumber($("donutTotal"), totalB);
+
+  /* ---------- Pembiayaan ---------- */
+  $("subPenerimaan").textContent  = fmt(totalPen);
+  $("subPengeluaran").textContent = fmt(totalPeng);
+
+  const maxFin = Math.max(
+    ...penerimaan.map(x => x.value),
+    ...pengeluaran.map(x => x.value),
+    1
+  );
+
+  renderFinList($("penerimaanList"), penerimaan, "var(--accent-main)", maxFin);
+  renderFinList($("pengeluaranList"), pengeluaran, "var(--neg)", maxFin);
+
+  const netoBox = $("netoBox");
+  netoBox.classList.toggle("neg", neto < 0);
+  $("netoNote").textContent = neto >= 0
+    ? "Neto positif · menambah SiLPA"
+    : "Neto negatif · mengurangi SiLPA";
+
+  animateNumber($("netoValue"), Math.abs(neto), v => (neto < 0 ? "−" : "") + fmt(v));
+
+  /* ---------- Ticker ---------- */
+  const text =
+    "<span>📊 <b>APBDes Desa Mata Iwoi Tahun " + yearKey + "</b>" +
+    " &nbsp;·&nbsp; Tema <b>" + theme.name + "</b>" +
+    " &nbsp;·&nbsp; Pendapatan <b>" + fmt(totalP) + "</b>" +
+    " &nbsp;·&nbsp; Belanja <b>" + fmt(totalB) + "</b>" +
+    " &nbsp;·&nbsp; Pembiayaan Neto <b>" + (neto < 0 ? "−" : "+") + fmt(Math.abs(neto)) + "</b>" +
+    " &nbsp;·&nbsp; SiLPA <b>" + (silpa < 0 ? "−" : "") + fmt(Math.abs(silpa)) + "</b>" +
+    " &nbsp;|&nbsp; Kecamatan Amonggedo, Kabupaten Konawe, Sulawesi Tenggara" +
+    " &nbsp;|&nbsp; <b>Transparansi Anggaran Desa</b> untuk masyarakat" +
+    " &nbsp;|&nbsp; Tekan <b>F</b> untuk layar penuh" +
+    " &nbsp;|&nbsp; <i>*data bersifat contoh/template</i></span>";
+  $("tickerTrack").innerHTML = text + text;
+}
+
+/* Render daftar item pembiayaan + mini bar */
+function renderFinList(container, items, color, max) {
+  container.innerHTML = "";
+
+  items.forEach((item) => {
+    const row = document.createElement("div");
+    row.className = "fin-row";
+    row.innerHTML =
+      '<div class="fin-row-top">' +
+        '<span class="fin-label">' + item.label + '</span>' +
+        '<span class="fin-value">' + fmt(item.value) + '</span>' +
+      '</div>' +
+      '<div class="fin-track">' +
+        '<span class="fin-fill" style="color:' + color + '"></span>' +
+      '</div>';
+    container.appendChild(row);
+
+    const fill = row.querySelector(".fin-fill");
+    const pct  = (item.value / max) * 100;
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      fill.style.width = pct + "%";
+    }));
+  });
+}
+
+/* =========================================================
+   6. NAVIGASI TAHUN & AUTO-ROTATE
+   ========================================================= */
+let currentYear  = "2024";
+let rotateTimer  = null;
+
+const progressBar = $("progressBar");
+const flash       = $("flash");
+
+function restartProgress() {
+  progressBar.style.animation = "none";
+  void progressBar.offsetWidth;
+  progressBar.style.animation = "grow " + (ROTATE_MS / 1000) + "s linear forwards";
+}
+
+function pulseFlash() {
+  flash.classList.remove("on");
+  void flash.offsetWidth;
+  flash.classList.add("on");
+}
+
+function setYear(year, resetTimer = true) {
+  currentYear = year;
+
+  document.querySelectorAll(".year-btn").forEach((b) => {
+    b.classList.toggle("active", b.dataset.year === year);
+  });
+
+  applyTheme(year);
+  render(year);
+  pulseFlash();
+
+  if (resetTimer) {
+    clearInterval(rotateTimer);
+    restartProgress();
+    rotateTimer = setInterval(nextYear, ROTATE_MS);
+  }
+}
+
+function nextYear() {
+  const i = ORDER.indexOf(currentYear);
+  setYear(ORDER[(i + 1) % ORDER.length]);
+}
+
+document.querySelectorAll(".year-btn").forEach((btn) => {
+  btn.addEventListener("click", () => setYear(btn.dataset.year));
+});
+
+/* =========================================================
+   7. FULLSCREEN
+   ========================================================= */
+const fsBtn = $("fsBtn");
+
+function isFullscreen() {
+  return !!(document.fullscreenElement || document.webkitFullscreenElement);
+}
+
+function toggleFullscreen() {
+  const el = document.documentElement;
+  if (!isFullscreen()) {
+    const req = el.requestFullscreen || el.webkitRequestFullscreen;
+    if (req) {
+      const p = req.call(el);
+      if (p && p.catch) p.catch(() => {});
+    }
+  } else {
+    const exit = document.exitFullscreen || document.webkitExitFullscreen;
+    if (exit) {
+      const p = exit.call(document);
+      if (p && p.catch) p.catch(() => {});
+    }
+  }
+}
+
+function updateFsBtn() {
+  fsBtn.classList.toggle("active", isFullscreen());
+  fsBtn.title = isFullscreen() ? "Keluar Layar Penuh (F)" : "Layar Penuh (F)";
+}
+
+fsBtn.addEventListener("click", toggleFullscreen);
+document.addEventListener("fullscreenchange", updateFsBtn);
+document.addEventListener("webkitfullscreenchange", updateFsBtn);
+
+/* Keyboard: ← → pindah tahun, F fullscreen */
+document.addEventListener("keydown", (e) => {
+  if (e.key === "ArrowRight") { e.preventDefault(); nextYear(); }
+  if (e.key === "ArrowLeft") {
+    e.preventDefault();
+    const i = ORDER.indexOf(currentYear);
+    setYear(ORDER[(i - 1 + ORDER.length) % ORDER.length]);
+  }
+  if (e.key === "f" || e.key === "F") { e.preventDefault(); toggleFullscreen(); }
+});
+
+/* =========================================================
+   8. JAM & TANGGAL
+   ========================================================= */
+const HARI  = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+const BULAN = ["Januari","Februari","Maret","April","Mei","Juni",
+               "Juli","Agustus","September","Oktober","November","Desember"];
+
+function tickClock() {
+  const now = new Date();
+  const p2  = (n) => String(n).padStart(2, "0");
+
+  $("clock").textContent =
+    p2(now.getHours()) + ":" + p2(now.getMinutes()) + ":" + p2(now.getSeconds());
+  $("date").textContent =
+    HARI[now.getDay()] + ", " + now.getDate() + " " +
+    BULAN[now.getMonth()] + " " + now.getFullYear();
+}
+
+/* =========================================================
+   9. INISIALISASI
+   ========================================================= */
+tickClock();
+setInterval(tickClock, 1000);
+setYear("2024");
+</script>
+</body>
+</html>
